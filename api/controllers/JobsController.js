@@ -17,7 +17,6 @@ module.exports = {
 
 		all: function(req, res) {
 	        Jobs.query('SELECT * FROM jobs', function(err, jobs) {
-	            console.log(jobs);
 							return  res.json(jobs);
 	        });
 	    }
