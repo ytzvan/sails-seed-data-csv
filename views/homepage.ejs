@@ -1,0 +1,117 @@
+<div class="container">
+<section class="content">
+          <div class="row">
+            <div class="col-xs-12">
+              <div class="box">
+                <div class="box-header">
+                  <h3 class="box-title">Jobs</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <table id="example1" class="table table-bordered table-hover">
+                    <thead>
+                      <tr>
+                        <th>Trackind ID</th>
+                        <th>Scheduled Pickup Time</th>
+                        <th>Supplier ID</th>
+                        <th>Price</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>City</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                     <% for (job in j) { %>
+                          <tr>
+                            <td><a data-toggle="modal" data-target="#myModal" onclick="fetchModal('<%= j[job].trackingId %>')" href="#myModal"><%= j[job].trackingId %></a></td>
+                            <td><%= j[job].scheduledPickupTime %></td>
+                            <td><%=j[job].supplierId%></td>
+                            <td><%=j[job].priceNetto%></td>
+                            <td><%= j[job].startName %></td>
+                            <td><%= j[job].status %></td>
+                            <td><%= j[job].startCity %></td>
+                          </tr>
+                      <% } %>
+                    </tbody>
+                    <tfoot>
+                      <tr>
+                        <th>Trackind ID</th>
+                        <th>Scheduled Pickup Time</th>
+                        <th>Supplier ID</th>
+                        <th>Price</th>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>City</th>
+                      </tr>
+                    </tfoot>
+                  </table>
+                                    <!-- Button trigger modal -->
+                  <!-- Modal -->
+                  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="title">Tracking ID: <span id="trackingID"></span></h4>
+                      </div>
+                      <div class="modal-body" id="modal-body">
+                        <label for="recipient-name" class="control-label">Recipient:</label>
+                          <ul>
+                            <li id="startName">Sender: </li>
+                            <li id="startPhone">Phone: </li>
+                            <li id="status">Status: </li>
+                            <li id="endName">Receiver: </li>
+                            <li id="custEmail">Customer E-mail: </li>
+                          </ul>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Add to cart</button>
+                      </div>
+                    </div>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+            </div><!-- /.col -->
+          </div><!-- /.row -->
+        </section><!-- /.content -->
+      </div>
+<script type="text/javascript">
+  function fetchModal(trackindId) {
+    var url = "http://api-stage.mylorry.de/v2/job/extended?jobTrackingId="+trackindId;
+    $('#myModal').modal('hide');
+    console.log(url);
+    $.ajax({
+         url: url,
+         type: "GET",
+         beforeSend: function(xhr){xhr.setRequestHeader('accessToken', 'IiGMbd-6KPmzWPfsWGRWC8iAR5ibr68_eyUHAP6OnS0');},
+         success: function() { console.log('Success!'); }
+      })
+      .done(function( data ) {
+        console.log(data.body);
+      $('#myModal').modal('show');
+      $( "#trackingID" ).append(trackindId);
+      $( "#startName" ).append(data.body.job.startName);
+      $( "#startPhone" ).append(data.body.job.startPhoneNumber);
+      $( "#status" ).append(data.body.job.status);
+      $( "#endName" ).append(data.body.job.endName);
+      $( "#custEmail" ).append(data.body.customer.email);
+      });
+      $('#myModal').on('hidden.bs.modal', function (e) {
+        $('.modal-body').find('li').empty();
+        $('#trackingID').empty();
+      })
+    };
+</script>
+
+<script type="text/javascript">
+      $(function () {
+        $("#example2").DataTable();
+        $('#example1').DataTable({
+          "paging": true,
+          "lengthChange": false,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false
+        });
+      });
+    </script>
