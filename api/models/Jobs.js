@@ -7,6 +7,17 @@
 
 module.exports = {
   attributes: {
-
+    llave: {
+      type: 'String'
+    },
+    hija: {
+      type: 'String'
+    },
+    madre: {
+      type: 'String'
+    },
+    codCliente: {
+      type: 'String'
+    },
   }
 };
