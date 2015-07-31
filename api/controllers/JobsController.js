@@ -48,6 +48,7 @@
 
  }
  var CSV = require('machinepack-csv');
+ var json2csv = require('json2csv');
 module.exports = {
 		home : function (req, res) {
 		 return	res.send("prueba");
@@ -62,4 +63,19 @@ module.exports = {
 	            seedData(req, res, data);
 	        });
 	},
+
+  exportar : function (req, res) {
+    Jobs.find()
+    .exec(function (err,dataCb){
+      json2csv({ data: dataCb }, function(err, csv) {
+        if (err) console.log(err);
+        res.set({
+          'Content-type': 'text/csv',
+          'Content-Disposition': 'attachment',
+          'filename': 'file.csv'
+        });
+        res.send(csv);
+      });
+    });
+  }
 };
